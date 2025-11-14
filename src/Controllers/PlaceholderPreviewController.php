@@ -19,7 +19,7 @@ class PlaceholderPreviewController extends Controller
 
         public function index(HTTPRequest $request)
         {
-            return $this->render();
+            return $this->customise([])->renderWith(['StevenPaw\SilverstripeStyleguide\Controllers\PlaceholderPreviewController', 'App\Controllers\PlaceholderPreviewController']);
         }
 
         /**

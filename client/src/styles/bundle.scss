@@ -27,7 +27,16 @@
     transition: border 0.2s ease;
 }
 
+.preview-main-content section:hover {
+    border: 1px solid transparent;
+    transition: border 0.2s ease;
+}
+
 .preview-main-content .section:hover {
+    border: 1px solid var(--PrimaryColor);
+}
+
+.preview-main-content section:hover {
     border: 1px solid var(--PrimaryColor);
 }
 
