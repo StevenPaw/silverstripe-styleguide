@@ -4,7 +4,7 @@ After: '#elemental'
 ---
 DNADesign\Elemental\Models\BaseElement:
   extensions:
-    - Atwx\SilverstripePlaceholders\Extensions\PlaceholderDataExtension
+    - StevenPaw\SilverstripeStyleguide\Extensions\PlaceholderDataExtension
 
 SilverStripe\Control\Director:
   rules:
