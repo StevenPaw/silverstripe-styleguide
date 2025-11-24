@@ -18,7 +18,8 @@ class PlaceholderImage
     {
         $this->width = $width;
         $this->height = $height;
-        $this->url = "https://placehold.co/{$width}x{$height}";
+        $randomimage = $this->getRandomImageUrl($width, $height);
+        $this->url = $randomimage;
     }
 
     public function getURL()
@@ -61,9 +62,11 @@ class PlaceholderImage
         $newWidth = (int)($this->width * $ratio);
         $newHeight = (int)($this->height * $ratio);
 
+        $randomimage = $this->getRandomImageUrl($newWidth, $newHeight);
+
         $html = sprintf(
             '<img src="%s" width="%d" height="%d" style="max-width: %dpx; max-height: %dpx;">',
-            $this->url,
+            $randomimage,
             $newWidth,
             $newHeight,
             $maxWidth,
@@ -83,11 +86,11 @@ class PlaceholderImage
         $ratio = min($maxWidth / $this->width, $maxHeight / $this->height, 1);
         $newWidth = (int)($this->width * $ratio);
         $newHeight = (int)($this->height * $ratio);
+        $randomimage = $this->getRandomImageUrl($newWidth, $newHeight);
 
         $html = sprintf(
-            '<img src="https://placehold.co/%dx%d" width="%d" height="%d" style="max-width: %dpx; max-height: %dpx;">',
-            $newWidth,
-            $newHeight,
+            '<img src="%s" width="%d" height="%d" style="max-width: %dpx; max-height: %dpx;">',
+            $randomimage,
             $newWidth,
             $newHeight,
             $maxWidth,
@@ -103,8 +106,11 @@ class PlaceholderImage
      */
     public function Fill($width, $height)
     {
+        $randomimage = $this->getRandomImageUrl($width, $height);
+
         $html = sprintf(
-            '<img src="https://placehold.co/%dx%d" width="%d" height="%d" style="object-fit: cover;">',
+            '<img src="%s" width="%d" height="%d" style="object-fit: cover;">',
+            $randomimage,
             $width,
             $height,
             $width,
@@ -124,11 +130,11 @@ class PlaceholderImage
         $ratio = min($width / $this->width, $height / $this->height);
         $newWidth = (int)($this->width * $ratio);
         $newHeight = (int)($this->height * $ratio);
+        $randomimage = $this->getRandomImageUrl($newWidth, $newHeight);
 
         $html = sprintf(
-            '<img src="https://placehold.co/%dx%d" width="%d" height="%d" style="object-fit: contain;">',
-            $newWidth,
-            $newHeight,
+            '<img src="%s" width="%d" height="%d" style="object-fit: contain;">',
+            $randomimage,
             $newWidth,
             $newHeight
         );
@@ -144,12 +150,13 @@ class PlaceholderImage
         $ratio = $width / $this->width;
         $height = (int)($this->height * $ratio);
 
+        $randomimage = $this->getRandomImageUrl($width, $height);
+
         $html = sprintf(
-            '<img src="https://placehold.co/%dx%d" width="%d" height="%d">',
+            '<img src="%s" width="%d" height="%d">',
+            $randomimage,
             $width,
             $height,
-            $width,
-            $height
         );
 
         return DBHTMLText::create()->setValue($html);
@@ -163,8 +170,11 @@ class PlaceholderImage
         $ratio = $height / $this->height;
         $width = (int)($this->width * $ratio);
 
+        $randomimage = $this->getRandomImageUrl($width, $height);
+
         $html = sprintf(
-            '<img src="https://placehold.co/%dx%d" width="%d" height="%d">',
+            '<img src="%s" width="%d" height="%d">',
+            $randomimage,
             $width,
             $height,
             $width,
@@ -176,9 +186,10 @@ class PlaceholderImage
 
     public function __toString()
     {
+        $randomimage = $this->getRandomImageUrl($this->width, $this->height);
         $html = sprintf(
             '<img src="%s" width="%d" height="%d">',
-            $this->url,
+            $randomimage,
             $this->width,
             $this->height
         );
@@ -192,5 +203,24 @@ class PlaceholderImage
     public function exists()
     {
         return true;
+    }
+
+    public function getRandomImageUrl($width, $height, $grayscale = false, $blur = 0)
+    {
+        if($grayscale || $blur > 0) {
+            $url = "https://picsum.photos/{$width}/{$height}";
+            $params = [];
+            if ($grayscale) {
+                $params[] = "grayscale";
+            }
+            if ($blur > 0) {
+                $params[] = "blur={$blur}";
+            }
+            if (!empty($params)) {
+                $url .= "?" . implode("&", $params);
+            }
+            return $url;
+        }
+        return "https://picsum.photos/{$width}/{$height}";
     }
 }
