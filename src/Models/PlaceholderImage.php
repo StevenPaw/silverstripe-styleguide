@@ -77,6 +77,30 @@ class PlaceholderImage
     }
 
     /**
+     * Mimics SilverStripe's FillMax method
+     */
+    public function FocusFillMax($maxWidth, $maxHeight)
+    {
+        // Calculate aspect ratio preserving dimensions
+        $ratio = min($maxWidth / $this->width, $maxHeight / $this->height);
+        $newWidth = (int)($this->width * $ratio);
+        $newHeight = (int)($this->height * $ratio);
+
+        $randomimage = $this->getRandomImageUrl($newWidth, $newHeight);
+
+        $html = sprintf(
+            '<img src="%s" width="%d" height="%d" style="max-width: %dpx; max-height: %dpx;">',
+            $randomimage,
+            $newWidth,
+            $newHeight,
+            $maxWidth,
+            $maxHeight
+        );
+
+        return DBHTMLText::create()->setValue($html);
+    }
+
+    /**
      * Mimics SilverStripe's FitMax method
      * Fits the image to the given maximum dimensions while maintaining aspect ratio
      */
@@ -105,6 +129,26 @@ class PlaceholderImage
      * Crops and resizes the image to exactly fill the given dimensions
      */
     public function Fill($width, $height)
+    {
+        $randomimage = $this->getRandomImageUrl($width, $height);
+
+        $html = sprintf(
+            '<img src="%s" width="%d" height="%d" style="object-fit: cover;">',
+            $randomimage,
+            $width,
+            $height,
+            $width,
+            $height
+        );
+
+        return DBHTMLText::create()->setValue($html);
+    }
+
+    /**
+     * Mimics SilverStripe's Fill method
+     * Crops and resizes the image to exactly fill the given dimensions
+     */
+    public function FocusFill($width, $height)
     {
         $randomimage = $this->getRandomImageUrl($width, $height);
 
